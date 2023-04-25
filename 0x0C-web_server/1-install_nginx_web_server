@@ -2,5 +2,6 @@
 # Configures NGINX
 sudo apt-get update
 sudo apt-get install -y nginx
+sudo sed -i 's/listen 80 default_server;/listen 80;/' /etc/nginx/sites-available/default
 sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
 sudo service nginx start
