@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Configures NGINX
+sudo apt-get update
+sudo apt-get install -y nginx
+sudo sed -i 's/listen 80 default_server;/listen 80;/' /etc/nginx/sites-available/default
+sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
+sudo sh -c echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404.html
+new_direct="server_name _;\n\trewrite ^\/redirect_me google.com permanent;"
+nstr="\n\terror_page 404 \/custom_404.html;\n\tlocation = \/custom_404.html {\n\t\troot \/usr\/share\/nginx\/html;\n\t\tinternal;\n\t}"
+sed -i "s/server_name _;/$new_direct$nstr/" /etc/nginx/sites-enabled/default
+sudo service nginx start
