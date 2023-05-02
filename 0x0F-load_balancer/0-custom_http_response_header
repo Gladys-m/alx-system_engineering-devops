@@ -2,7 +2,6 @@
 # Configures NGINX
 sudo apt-get update
 sudo apt-get install -y nginx
-sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
 sudo chmod o+w /var/www/html/
 echo "Ceci n'est pas une page" > /var/www/html/404.html
 server_config=\
@@ -26,5 +25,5 @@ server_config=\
 }"
 
 sudo chmod o+w /etc/nginx/sites-enabled/
-sudo sh -c echo "$server_config" > /etc/nginx/sites-enabled/default
+echo "$server_config" > /etc/nginx/sites-enabled/default
 sudo service nginx restart
