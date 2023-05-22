@@ -5,6 +5,7 @@ if __name__ == "__main__":
     import requests
 
     def get_employee_todo_progress(employee_id):
+        """ get to_do progress """
         base_url = "https://jsonplaceholder.typicode.com"
         employee_url = f"{base_url}/users/{employee_id}"
         todos_url = f"{base_url}/todos?userId={employee_id}"
@@ -26,7 +27,7 @@ if __name__ == "__main__":
             completed_tasks = [todo["title"] for todo in todos_data if todo["completed"]]
 
             # Display progress information
-            print(f"Employee {employee_name} is done with tasks ({len(completed_tasks)}/{total_tasks}):")
+            print(f"Employee {employee_name} is done with task")
             for task in completed_tasks:
                 print(f"\t{task}")
 
