@@ -2,38 +2,39 @@
 """ Gather data from an API  """
 
 if __name__ == "__main__":
-    import requests
+    from requests import get
+    from sys import argv, exit
 
-    def get_employee_todo_progress(employee_id):
-        """ get to_do progress """
-        base_url = "https://jsonplaceholder.typicode.com"
-        employee_url = f"{base_url}/users/{employee_id}"
-        todos_url = f"{base_url}/todos?userId={employee_id}"
+    try:
+        id = argv[1]
+        is_int = int(id)
+    except:
+        exit()
 
-        try:
-            # Fetch employee details
-            employee_response = requests.get(employee_url)
-            employee_response.raise_for_status()
-            employee_data = employee_response.json()
+    url_user = "https://jsonplaceholder.typicode.com/users?id=" + id
+    url_todo = "https://jsonplaceholder.typicode.com/todos?userId=" + id
 
-            # Fetch employee's TODO list
-            todos_response = requests.get(todos_url)
-            todos_response.raise_for_status()
-            todos_data = todos_response.json()
+    r_user = get(url_user)
+    r_todo = get(url_todo)
 
-            # Extract relevant information
-            employee_name = employee_data["name"]
-            total_tasks = len(todos_data)
-            completed_tasks = [todo["title"] for todo in todos_data if todo["completed"]]
+    try:
+        js_user = r_user.json()
+        js_todo = r_todo.json()
 
-            # Display progress information
-            print(f"Employee {employee_name} is done with task")
-            for task in completed_tasks:
-                print(f"\t{task}")
+    except ValueError:
+        print("Not a valid JSON")
 
-            except requests.exceptions.RequestException as e:
-                print("Error occurred:", e)
+    if js_user and js_todo:
+        EMPLOYEE_NAME = js_user[0].get('name')
+        TOTAL_NUMBER_OF_TASKS = len(js_todo)
+        NUMBER_OF_DONE_TASKS = sum(item.get("completed")
+                                   for item in js_todo if item)
 
-            # Test the function with an employee ID
-            employee_id = 1  # Replace with the desired employee ID
-            get_employee_todo_progress(employee_id)
+        print("Employee {} is done with tasks({}/{}):"
+              .format(EMPLOYEE_NAME,
+                      NUMBER_OF_DONE_TASKS,
+                      TOTAL_NUMBER_OF_TASKS))
+        for todo in js_todo:
+            TASK_TITLE = todo.get('title')
+            if todo.get("completed"):
+                print("\t {}".format(TASK_TITLE))
